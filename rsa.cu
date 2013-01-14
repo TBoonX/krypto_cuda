@@ -5,12 +5,12 @@
 //#define DEBUG
 
 //Variablen
-#define p 7
-#define q 11
-#define n 77
-#define e 7
-#define v 103 //zu gross -> neu berechnen!
-#define z 360
+#define p 3
+#define q 5
+#define n 15
+#define e 3
+#define v 3
+#define z 8
 #define anzahl_Texte 1000
 
 __device __ long int klartexte[anzahl_Texte];
@@ -73,7 +73,7 @@ __global__ void verschluessselung(int klartext)
 	for (i = 0 ; i < 100; i ++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		geheimtexte[i+blockIdx.x*100] = pow(klartexte[i+blockIdx.x*100],v) % v;
+		geheimtexte[i+blockIdx.x*100] = pow(klartexte[i+blockIdx.x*100],v) % n;
 	}
 	
 	printf("\nProzessor %d hat verschluesselt.\n", blockIdx.x);
@@ -82,7 +82,15 @@ __global__ void verschluessselung(int klartext)
 
 __global__ void entschluessselung(int index)
 {
+	int i;
 	
+	for (i = 0 ; i < 100; i ++)
+	{
+		//Integer hoch 103 ist zu hoch!
+		klartexte[i+blockIdx.x*100] = pow(geheimtexte[i+blockIdx.x*100],e) % n;
+	}
+	
+	printf("\nProzessor %d hat entschluesselt.\n", blockIdx.x);	
 }
 
 
@@ -97,7 +105,7 @@ int main(void) {
 	srand((unsigned)time(NULL));
 	for (i = 0; i < anzahl_Texte; i ++)
 	{
-		klartexte[i] = rand() % 10;		//Zahlen nicht  zu groß wählen
+		klartexte[i] = rand() % 10;		//Zahlen nicht  zu groï¿½ wï¿½hlen
 	}
 
 	int *dev_matM, *dev_matN, *dev_matP;
