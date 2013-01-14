@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 //#define DEBUG
 
@@ -8,13 +9,13 @@
 #define q 11
 #define n 77
 #define e 7
-#define v 103
+#define v 103 //zu gross -> neu berechnen!
 #define z 360
 #define anzahl_Texte 1000
 
-__device __ int klartexte[anzahl_Texte];
-__device __ int klartexte_pruefung[anzahl_Texte];
-__device __ int geheimtexte[anzahl_Texte];
+__device __ long int klartexte[anzahl_Texte];
+__device __ long int klartexte_pruefung[anzahl_Texte];
+__device __ long int geheimtexte[anzahl_Texte];
 
 /*
 Klartext: K
@@ -67,7 +68,15 @@ __global__ void matmul_simple(int *matM, int *matN, int *matP) {
 
 __global__ void verschluessselung(int klartext)
 {
+	int i;
 	
+	for (i = 0 ; i < 100; i ++)
+	{
+		//Integer hoch 103 ist zu hoch!
+		geheimtexte[i+blockIdx.x*100] = pow(klartexte[i+blockIdx.x*100],v) % v;
+	}
+	
+	printf("\nProzessor %d hat verschluesselt.\n", blockIdx.x);
 }
 
 
@@ -83,9 +92,13 @@ int main(void) {
 	cudaEvent_t start, stop;
 	float elapsedTime;
 
-	int matM[WIDTH * WIDTH];
-	int matN[WIDTH * WIDTH];
-	int matP[WIDTH * WIDTH];
+	//Klartetexte Array belegen
+	//rand initialisieren
+	srand((unsigned)time(NULL));
+	for (i = 0; i < anzahl_Texte; i ++)
+	{
+		klartexte[i] = rand() % 10;		//Zahlen nicht  zu groß wählen
+	}
 
 	int *dev_matM, *dev_matN, *dev_matP;
 
