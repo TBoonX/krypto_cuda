@@ -48,11 +48,11 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 		geheimtexte[i+blockIdx.x*block_length] = __powf(klartexte[i+blockIdx.x*block_length],3) % 15;
 		//geheimtexte[i+blockIdx.x*block_length] = mypow(,v);
 		
-		/*multi = x  = klartexte[i+blockIdx.x*block_length];
+		multi = x  = klartexte[i+blockIdx.x*block_length];
 		for (j = 1; i < v; i++)
 			x *= multi;
 		
-		geheimtexte[i+blockIdx.x*block_length] = x % n;*/
+		geheimtexte[i+blockIdx.x*block_length] = x % n;
 	}
 }
 
@@ -66,15 +66,15 @@ __global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		klartexte_pruefung[i+blockIdx.x*block_length] = __powf(geheimtexte[i+blockIdx.x*block_length],e) % n;
+		//klartexte_pruefung[i+blockIdx.x*block_length] = __powf(geheimtexte[i+blockIdx.x*block_length],e) % n;
 		
-		/*
+		
 		multi = x  = geheimtexte[i+blockIdx.x*block_length];
 		for (j = 1; i < e; i++)
 			x *= multi;
 		
 		klartexte_pruefung[i+blockIdx.x*block_length] = x % n;
-		*/
+		
 	}
 }
 
@@ -123,9 +123,9 @@ int main(void) {
 
 	HANDLE_ERROR(cudaEventRecord(start, 0));
 
-        HANDLE_ERROR(cudaMalloc((void **)&dev_klartexte, sizeof(klartexte)));
-        HANDLE_ERROR(cudaMalloc((void **)&dev_geheimtexte, sizeof(geheimtexte)));
-        HANDLE_ERROR(cudaMalloc((void **)&dev_klartexte_pruefung, sizeof(klartexte_pruefung)));
+        HANDLE_ERROR(cudaMalloc((void *)&dev_klartexte, sizeof(klartexte)));
+        HANDLE_ERROR(cudaMalloc((void *)&dev_geheimtexte, sizeof(geheimtexte)));
+        HANDLE_ERROR(cudaMalloc((void *)&dev_klartexte_pruefung, sizeof(klartexte_pruefung)));
 
         HANDLE_ERROR(cudaMemcpy(dev_klartexte, klartexte, sizeof(klartexte), cudaMemcpyHostToDevice));
         //HANDLE_ERROR(cudaMemcpy(dev_matN, matN, sizeof(matN), cudaMemcpyHostToDevice));
@@ -145,7 +145,7 @@ int main(void) {
 		
 		entschluessselung<<<blocks, 1>>>(dev_geheimtexte, dev_klartexte_pruefung);
 		
-		 HANDLE_ERROR(cudaMemcpy(klartexte_pruefung, dev_klartexte_pruefung, sizeof(klartexte_pruefung), cudaMemcpyDeviceToHost));
+		HANDLE_ERROR(cudaMemcpy(klartexte_pruefung, dev_klartexte_pruefung, sizeof(klartexte_pruefung), cudaMemcpyDeviceToHost));
 		
 
 	HANDLE_ERROR(cudaEventRecord(stop, 0));
