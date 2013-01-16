@@ -93,6 +93,11 @@ int main(void) {
 	long int klartexte[anzahl_Texte];
 	long int klartexte_pruefung[anzahl_Texte];
 	long int geheimtexte[anzahl_Texte];
+	
+	printf("\nlong int: %d\n", sizeof(long int));
+	printf("\nunsigned long int: %d\n", sizeof(unsigned long int));
+	printf("\nunsigned long long: %d\n", sizeof(unsigned long long));
+	
 
 	//Klartetexte Array belegen
 	//rand initialisieren
