@@ -64,7 +64,7 @@ __global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 	}
 }
 
-__global__ void mypow(int x, int y)
+__device__ int mypow(int x, int y)
 {
 	
 	int i;
