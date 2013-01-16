@@ -11,7 +11,7 @@
 #define e 3
 #define v 3
 #define z 8
-#define anzahl_Texte 1000
+#define anzahl_Texte 80
 #define count_cores 8
 
 //__device__ long int klartexte[anzahl_Texte];
@@ -98,6 +98,13 @@ int main(void) {
 	{
 		klartexte[i] = rand() % 10;		//Zahlen nicht  zu gross waehlen
 	}
+	
+	printf("Die Klartexte:\n");
+	for (i = 0; i < anzahl_Texte; i++)
+	{
+		printf("%ld, ", klartexte[i]);
+	}
+	printf("\n\n");
 
 	int *dev_klartexte, *dev_geheimtexte, *dev_klartexte_pruefung;
 
