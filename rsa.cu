@@ -59,7 +59,7 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 
 __global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 {
-	int i;
+	int i, j, multi, x;
 	
 	int block_length = anzahl_Texte/count_cores;
 
