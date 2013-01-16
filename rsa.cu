@@ -44,12 +44,6 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 	
 	for (i = 0 ; i < block_length; i++)
 	{
-		//Integer hoch 103 ist zu hoch!
-		//geheimtexte[i+blockIdx.x*block_length] = (int)mypow(klartexte[i+blockIdx.x*block_length],3) % 15;
-		//geheimtexte[i+blockIdx.x*block_length] = mypow(,v);
-		//geheimtexte[i+blockIdx.x*block_length] = (klartexte[i+blockIdx.x*block_length]*klartexte[i+blockIdx.x*block_length]*klartexte[i+blockIdx.x*block_length]) % 15;
-		
-		
 		multi = x  = klartexte[i+blockIdx.x*block_length];
 		for (j = 1; j < v; j++)
 			x *= multi;
@@ -68,11 +62,6 @@ __global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 
 	for (i = 0 ; i < block_length; i++)
 	{
-		//Integer hoch 103 ist zu hoch!
-		//klartexte_pruefung[i+blockIdx.x*block_length] = (int)mypow(geheimtexte[i+blockIdx.x*block_length],e) % n;
-		//klartexte_pruefung[i+blockIdx.x*block_length] = (geheimtexte[i+blockIdx.x*block_length]*geheimtexte[i+blockIdx.x*block_length]*geheimtexte[i+blockIdx.x*block_length]) % n;
-		
-		
 		multi = x  = geheimtexte[i+blockIdx.x*block_length];
 		for (j = 1; j < e; j++)
 			x *= multi;
@@ -83,7 +72,7 @@ __global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 }
 
 int main(void) {
-	int i, j;
+	int i;
 	cudaEvent_t start, stop;
 	float elapsedTime;
 	
@@ -96,13 +85,13 @@ int main(void) {
 	srand((unsigned)time(NULL));
 	for (i = 0; i < anzahl_Texte; i ++)
 	{
-		klartexte[i] = i % 11;		//Zahlen nicht  zu gross waehlen
+		klartexte[i] = rand() % 10;		//Zahlen nicht  zu gross waehlen
 	}
 	
 	printf("Die Klartexte:\n");
 	for (i = 0; i < anzahl_Texte; i++)
 	{
-		printf("%ld, ", klartexte[i]);
+		printf("%d, ", klartexte[i]);
 	}
 	printf("\n\n");
 
@@ -120,7 +109,6 @@ int main(void) {
         HANDLE_ERROR(cudaMalloc((void **)&dev_klartexte_pruefung, sizeof(klartexte_pruefung)));
 
         HANDLE_ERROR(cudaMemcpy(dev_klartexte, klartexte, sizeof(klartexte), cudaMemcpyHostToDevice));
-        //HANDLE_ERROR(cudaMemcpy(dev_matN, matN, sizeof(matN), cudaMemcpyHostToDevice));
 
 	dim3 blocks(count_cores, 1);
 
@@ -128,25 +116,25 @@ int main(void) {
 
         HANDLE_ERROR(cudaMemcpy(geheimtexte, dev_geheimtexte, sizeof(geheimtexte), cudaMemcpyDeviceToHost));
 		
-		printf("Die Klartexte wurden verschluesselt.\n\nGeheimtexte:\n");
-		for (i = 0; i < anzahl_Texte; i++)
-		{
-			printf("%ld, ", geheimtexte[i]);
-		}
-		printf("\n\n");
-		
-		entschluessselung<<<blocks, 1>>>(dev_geheimtexte, dev_klartexte_pruefung);
-		
-		HANDLE_ERROR(cudaMemcpy(klartexte_pruefung, dev_klartexte_pruefung, sizeof(klartexte_pruefung), cudaMemcpyDeviceToHost));
+	printf("Die Klartexte wurden verschluesselt.\n\nGeheimtexte:\n");
+	for (i = 0; i < anzahl_Texte; i++)
+	{
+		printf("%d, ", geheimtexte[i]);
+	}
+	printf("\n\n");
+	
+	entschluessselung<<<blocks, 1>>>(dev_geheimtexte, dev_klartexte_pruefung);
+	
+	HANDLE_ERROR(cudaMemcpy(klartexte_pruefung, dev_klartexte_pruefung, sizeof(klartexte_pruefung), cudaMemcpyDeviceToHost));
 		
 
 	HANDLE_ERROR(cudaEventRecord(stop, 0));
 	HANDLE_ERROR(cudaEventSynchronize(stop));
 	
-	printf("Die Geheimtexte wurden entschluesselt.\n\Klartexte:\n");
+	printf("Die Geheimtexte wurden entschluesselt.\n\nKlartexte:\n");
 		for (i = 0; i < anzahl_Texte; i++)
 		{
-			printf("%ld, ", klartexte_pruefung[i]);
+			printf("%d, ", klartexte_pruefung[i]);
 		}
 		printf("\n\n");
 
