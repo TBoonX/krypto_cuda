@@ -46,7 +46,7 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 	{
 		//Integer hoch 103 ist zu hoch!
 		//geheimtexte[i+blockIdx.x*block_length] = pow(klartexte[i+blockIdx.x*block_length],3) % 15;
-		geheimtexte[i+blockIdx.x*block_length] = klartexte[i+blockIdx.x*block_length]+1;
+		geheimtexte[i+blockIdx.x*block_length] = pow(klartexte[i+blockIdx.x*block_length],3);
 	}
 }
 
