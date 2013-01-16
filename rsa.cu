@@ -45,7 +45,8 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		geheimtexte[i+blockIdx.x*block_length] = pow(klartexte[i+blockIdx.x*block_length],3) % 15;
+		//geheimtexte[i+blockIdx.x*block_length] = pow(klartexte[i+blockIdx.x*block_length],3) % 15;
+		geheimtexte[i] = klartexte[i]+1;
 	}
 	
 	printf("\nProzessor %d hat verschluesselt.\n", blockIdx.x);
@@ -61,7 +62,7 @@ __global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		klartexte_pruefung[i+blockIdx.x*block_length] = pow(geheimtexte[i+blockIdx.x*block_length],e) % n;
+		//klartexte_pruefung[i+blockIdx.x*block_length] = pow(geheimtexte[i+blockIdx.x*block_length],e) % n;
 	}
 
 	printf("\nProzessor %d hat entschluesselt.\n", blockIdx.x);
