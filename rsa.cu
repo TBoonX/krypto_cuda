@@ -42,12 +42,10 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 	
 	int block_length = anzahl_Texte/count_cores;
 	
-	int v = 3;
-	
 	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		geheimtexte[i+blockIdx.x*block_length] = pow(klartexte[i+blockIdx.x*block_length],v) % n;
+		geheimtexte[i+blockIdx.x*block_length] = pow(klartexte[i+blockIdx.x*block_length],3) % 15;
 	}
 	
 	printf("\nProzessor %d hat verschluesselt.\n", blockIdx.x);
@@ -76,9 +74,9 @@ int main(void) {
 	cudaEvent_t start, stop;
 	float elapsedTime;
 	
-	long int klartexte[anzahl_Texte];
-	long int klartexte_pruefung[anzahl_Texte];
-	long int geheimtexte[anzahl_Texte];
+	int klartexte[anzahl_Texte];
+	int klartexte_pruefung[anzahl_Texte];
+	int geheimtexte[anzahl_Texte];
 
 	//Klartetexte Array belegen
 	//rand initialisieren
