@@ -11,7 +11,7 @@
 #define e 3
 #define v 3
 #define z 8
-#define anzahl_Texte 800
+#define anzahl_Texte 80
 #define count_cores 8
 
 //__device__ long int klartexte[anzahl_Texte];
@@ -71,6 +71,20 @@ __global__ void entschluessselung(long int geheimtexte[], long int klartexte_pru
 	}
 }
 
+/*
+int* equals(long int *a, long int *b)
+{
+	int i;
+
+	for (i = 0; i < anzahl_Texte; i++)
+	{
+		if (a(i) != b(i))
+			return 0;
+	}
+	return 1;
+}
+*/
+
 int main(void) {
 	int i;
 	cudaEvent_t start, stop;
@@ -85,7 +99,7 @@ int main(void) {
 	srand((unsigned)time(NULL));
 	for (i = 0; i < anzahl_Texte; i ++)
 	{
-		klartexte[i] = rand() % 100;		//Zahlen nicht  zu gross waehlen
+		klartexte[i] = rand() % 15;		//Zahlen nicht  zu gross waehlen
 	}
 	
 	printf("Die Klartexte:\n");
@@ -138,6 +152,11 @@ int main(void) {
 		}
 		printf("\n\n");
 
+/*	printf("\nDie Klartexte sind ");
+	if (equals(klartexte, klartexte_pruefung))
+		printf("NICHT ");
+	printf("identisch.\n\n");
+*/
 	HANDLE_ERROR(cudaEventElapsedTime(&elapsedTime, start, stop));
 	printf("Elapsed time: %3.1f ms\n", elapsedTime);
 

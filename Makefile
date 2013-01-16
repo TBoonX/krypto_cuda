@@ -1,4 +1,4 @@
-TARGET=cuda
+TARGET=rsa
 
 NVCC=/usr/local/cuda/bin/nvcc
 
