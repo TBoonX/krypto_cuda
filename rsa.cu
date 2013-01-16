@@ -45,14 +45,14 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		//geheimtexte[i+blockIdx.x*block_length] = pow(klartexte[i+blockIdx.x*block_length],3) % 15;
+		geheimtexte[i+blockIdx.x*block_length] = __powf(klartexte[i+blockIdx.x*block_length],3) % 15;
 		//geheimtexte[i+blockIdx.x*block_length] = mypow(,v);
 		
-		multi = x  = klartexte[i+blockIdx.x*block_length];
+		/*multi = x  = klartexte[i+blockIdx.x*block_length];
 		for (j = 1; i < v; i++)
 			x *= multi;
 		
-		geheimtexte[i+blockIdx.x*block_length] = x % n;
+		geheimtexte[i+blockIdx.x*block_length] = x % n;*/
 	}
 }
 
@@ -66,13 +66,15 @@ __global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		//klartexte_pruefung[i+blockIdx.x*block_length] = pow(geheimtexte[i+blockIdx.x*block_length],e) % n;
+		klartexte_pruefung[i+blockIdx.x*block_length] = __powf(geheimtexte[i+blockIdx.x*block_length],e) % n;
 		
+		/*
 		multi = x  = geheimtexte[i+blockIdx.x*block_length];
 		for (j = 1; i < e; i++)
 			x *= multi;
 		
 		klartexte_pruefung[i+blockIdx.x*block_length] = x % n;
+		*/
 	}
 }
 
