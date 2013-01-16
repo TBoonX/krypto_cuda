@@ -5,17 +5,18 @@
 //#define DEBUG
 
 //Variablen
-#define p 7
-#define q 11
-#define n 77
-#define e 7
-#define v 103 //zu gross -> neu berechnen!
-#define z 360
+#define p 3
+#define q 5
+#define n 15
+#define e 3
+#define v 3
+#define z 8
 #define anzahl_Texte 1000
+#define count_cores 8
 
-__device __ long int klartexte[anzahl_Texte];
-__device __ long int klartexte_pruefung[anzahl_Texte];
-__device __ long int geheimtexte[anzahl_Texte];
+//__device__ long int klartexte[anzahl_Texte];
+//__device__ long int klartexte_pruefung[anzahl_Texte];
+//__device__ long int geheimtexte[anzahl_Texte];
 
 /*
 Klartext: K
@@ -27,12 +28,6 @@ Index des CUDA Kerns: blockIdx.x blockIdx.y
 
 */
 
-#ifdef DEBUG
-	#define WIDTH 3
-#else
-	#define WIDTH 256
-#endif
-
 static void HandleError( cudaError_t err, const char *file, int line ) {
 	if (err != cudaSuccess) {
 		printf( "%s in %s at line %d\n", cudaGetErrorString( err ), file, line );
@@ -41,48 +36,35 @@ static void HandleError( cudaError_t err, const char *file, int line ) {
 }
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
-__device__ int getArrayElement(int *m, int x, int y, int width) {
-	return m[y * width + x];
-}
-
-__device__ void setArrayElement(int *m, int x, int y, int width, int value) {
-	m[y * width + x] = value;
-}
-
-
-__global__ void matmul_simple(int *matM, int *matN, int *matP) {
-	int sum, i;
-	int m, n;
-
-	sum = 0;
-
-	for(i = 0; i < WIDTH; i++) {
-		m = getArrayElement(matM, blockIdx.x, i, WIDTH);
-		n = getArrayElement(matN, i, blockIdx.y, WIDTH);
-
-		sum += m * n;
-	}
-
-	setArrayElement(matP, blockIdx.x, blockIdx.y, WIDTH, sum);
-}
-
-__global__ void verschluessselung(int klartext)
+__global__ void verschluessselung()
 {
 	int i;
 	
-	for (i = 0 ; i < 100; i ++)
+	int block_length = anzahl_Texte/count_cores;
+	
+	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		geheimtexte[i+blockIdx.x*100] = pow(klartexte[i+blockIdx.x*100],v) % v;
+		geheimtexte[i+blockIdx.x*block_length] = pow(klartexte[i+blockIdx.x*block_length],v) % n;
 	}
 	
 	printf("\nProzessor %d hat verschluesselt.\n", blockIdx.x);
 }
 
 
-__global__ void entschluessselung(int index)
+__global__ void entschluessselung()
 {
+	int i;
 	
+	int block_length = anzahl_Texte/count_cores;
+
+	for (i = 0 ; i < block_length; i++)
+	{
+		//Integer hoch 103 ist zu hoch!
+		klartexte[i+blockIdx.x*block_length] = pow(geheimtexte[i+blockIdx.x*block_length],e) % n;
+	}
+
+	printf("\nProzessor %d hat entschluesselt.\n", blockIdx.x);
 }
 
 
@@ -91,46 +73,48 @@ int main(void) {
 	int i, j;
 	cudaEvent_t start, stop;
 	float elapsedTime;
+	
+	long int klartexte[anzahl_Texte];
+	long int klartexte_pruefung[anzahl_Texte];
+	long int geheimtexte[anzahl_Texte];
 
 	//Klartetexte Array belegen
 	//rand initialisieren
 	srand((unsigned)time(NULL));
 	for (i = 0; i < anzahl_Texte; i ++)
 	{
-		klartexte[i] = rand() % 10;		//Zahlen nicht  zu groß wählen
+		klartexte[i] = rand() % 10;		//Zahlen nicht  zu gross waehlen
 	}
 
-	int *dev_matM, *dev_matN, *dev_matP;
+	int *dev_klartexte, *dev_geheimtexte, *dev_klartexte_pruefung;
 
 	HANDLE_ERROR(cudaEventCreate(&start));
 	HANDLE_ERROR(cudaEventCreate(&stop));
 
-	for(i = 0; i < WIDTH; i++) {
-		for(j = 0; j < WIDTH; j++) {
-#ifdef DEBUG
-			matM[i + j * WIDTH] = i * WIDTH + j;
-			matN[i + j * WIDTH] = i + j * WIDTH;
-#else
-			matM[i + j * WIDTH] = rand();
-			matN[i + j * WIDTH] = rand();
-#endif
-		}
-	}
+
 
 	HANDLE_ERROR(cudaEventRecord(start, 0));
 
-        HANDLE_ERROR(cudaMalloc((void **)&dev_matM, sizeof(matM)));
-        HANDLE_ERROR(cudaMalloc((void **)&dev_matN, sizeof(matN)));
-        HANDLE_ERROR(cudaMalloc((void **)&dev_matP, sizeof(matP)));
+        HANDLE_ERROR(cudaMalloc((void **)&dev_klartexte, sizeof(klartexte)));
+        HANDLE_ERROR(cudaMalloc((void **)&dev_geheimtexte, sizeof(geheimtexte)));
+        HANDLE_ERROR(cudaMalloc((void **)&dev_klartexte_pruefung, sizeof(klartexte_pruefung)));
 
-        HANDLE_ERROR(cudaMemcpy(dev_matM, matM, sizeof(matM), cudaMemcpyHostToDevice));
-        HANDLE_ERROR(cudaMemcpy(dev_matN, matN, sizeof(matN), cudaMemcpyHostToDevice));
+        HANDLE_ERROR(cudaMemcpy(dev_klartexte, klartexte, sizeof(klartexte), cudaMemcpyHostToDevice));
+        //HANDLE_ERROR(cudaMemcpy(dev_matN, matN, sizeof(matN), cudaMemcpyHostToDevice));
 
-	dim3 blocks(WIDTH, WIDTH);
+	dim3 blocks(count_cores, 1);
 
-	matmul_simple<<<blocks, 1>>>(dev_matM, dev_matN, dev_matP);
+	verschluessselung<<<blocks, 1>>>();
 
-        HANDLE_ERROR(cudaMemcpy(matP, dev_matP, sizeof(matP), cudaMemcpyDeviceToHost));
+        HANDLE_ERROR(cudaMemcpy(geheimtexte, dev_geheimtexte, sizeof(geheimtexte), cudaMemcpyDeviceToHost));
+		
+		printf("Die Geheimtexte wurden verschluesselt.\n\nGeheimtexte:\n");
+		for (i = 0; i < anzahl_Texte; i++)
+		{
+			printf("%ld, ", geheimtexte[i]);
+		}
+		printf("\n\n");
+		
 
 	HANDLE_ERROR(cudaEventRecord(stop, 0));
 	HANDLE_ERROR(cudaEventSynchronize(stop));
@@ -138,31 +122,7 @@ int main(void) {
 	HANDLE_ERROR(cudaEventElapsedTime(&elapsedTime, start, stop));
 	printf("Elapsed time: %3.1f ms\n", elapsedTime);
 
-#ifdef DEBUG
-	printf("MatM:\n");
-	for(i = 0; i < WIDTH; i++) {
-		for(j = 0; j < WIDTH; j++) {
-			printf("%4d ", matM[i + j * WIDTH]);
-		}
-		printf("\n");
-	}
 
-	printf("MatN:\n");
-	for(i = 0; i < WIDTH; i++) {
-		for(j = 0; j < WIDTH; j++) {
-			printf("%4d ", matN[i + j * WIDTH]);
-		}
-		printf("\n");
-	}
-
-	printf("MatP:\n");
-	for(i = 0; i < WIDTH; i++) {
-		for(j = 0; j < WIDTH; j++) {
-			printf("%4d ", matP[i + j * WIDTH]);
-		}
-		printf("\n");
-	}
-#endif
 
 	HANDLE_ERROR(cudaEventDestroy(start));
 	HANDLE_ERROR(cudaEventDestroy(stop));
