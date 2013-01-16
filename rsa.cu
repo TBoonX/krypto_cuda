@@ -141,6 +141,10 @@ int main(void) {
 		}
 		printf("\n\n");
 		
+		entschluessselung<<<blocks, 1>>>(dev_geheimtexte, dev_klartexte_pruefung);
+		
+		 HANDLE_ERROR(cudaMemcpy(klartexte_pruefung, dev_klartexte_pruefung, sizeof(klartexte_pruefung), cudaMemcpyDeviceToHost));
+		
 
 	HANDLE_ERROR(cudaEventRecord(stop, 0));
 	HANDLE_ERROR(cudaEventSynchronize(stop));
