@@ -36,7 +36,7 @@ static void HandleError( cudaError_t err, const char *file, int line ) {
 }
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
-__global__ void verschluessselung(int klartexte[], int geheimtexte[])
+__global__ void verschluessselung(long int klartexte[], long int geheimtexte[])
 {
 	long int i, j, multi, x;
 	
@@ -54,7 +54,7 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 }
 
 
-__global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
+__global__ void entschluessselung(long int geheimtexte[], long int klartexte_pruefung[])
 {
 	long int i, j, multi, x;
 	
