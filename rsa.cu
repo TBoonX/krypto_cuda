@@ -67,6 +67,12 @@ __global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 	{
 		//Integer hoch 103 ist zu hoch!
 		//klartexte_pruefung[i+blockIdx.x*block_length] = pow(geheimtexte[i+blockIdx.x*block_length],e) % n;
+		
+		multi = x  = geheimtexte[i+blockIdx.x*block_length];
+		for (j = 1; i < e; i++)
+			x *= multi;
+		
+		klartexte_pruefung[i+blockIdx.x*block_length] = x % n;
 	}
 }
 
@@ -128,7 +134,7 @@ int main(void) {
 
         HANDLE_ERROR(cudaMemcpy(geheimtexte, dev_geheimtexte, sizeof(geheimtexte), cudaMemcpyDeviceToHost));
 		
-		printf("Die Geheimtexte wurden verschluesselt.\n\nGeheimtexte:\n");
+		printf("Die Klartexte wurden verschluesselt.\n\nGeheimtexte:\n");
 		for (i = 0; i < anzahl_Texte; i++)
 		{
 			printf("%ld, ", geheimtexte[i]);
@@ -138,6 +144,13 @@ int main(void) {
 
 	HANDLE_ERROR(cudaEventRecord(stop, 0));
 	HANDLE_ERROR(cudaEventSynchronize(stop));
+	
+	printf("Die Geheimtexte wurden entschluesselt.\n\Klartexte:\n");
+		for (i = 0; i < anzahl_Texte; i++)
+		{
+			printf("%ld, ", klartexte_pruefung[i]);
+		}
+		printf("\n\n");
 
 	HANDLE_ERROR(cudaEventElapsedTime(&elapsedTime, start, stop));
 	printf("Elapsed time: %3.1f ms\n", elapsedTime);
