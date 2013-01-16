@@ -45,7 +45,7 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		geheimtexte[i+blockIdx.x*block_length] = __powf(klartexte[i+blockIdx.x*block_length],3) % 15;
+		//geheimtexte[i+blockIdx.x*block_length] = __powf(klartexte[i+blockIdx.x*block_length],3) % 15;
 		//geheimtexte[i+blockIdx.x*block_length] = mypow(,v);
 		
 		multi = x  = klartexte[i+blockIdx.x*block_length];
