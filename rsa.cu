@@ -38,7 +38,7 @@ static void HandleError( cudaError_t err, const char *file, int line ) {
 
 __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 {
-	int i;
+	int i, j, multi, x;
 	
 	int block_length = anzahl_Texte/count_cores;
 	
@@ -46,7 +46,13 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 	{
 		//Integer hoch 103 ist zu hoch!
 		//geheimtexte[i+blockIdx.x*block_length] = pow(klartexte[i+blockIdx.x*block_length],3) % 15;
-		geheimtexte[i+blockIdx.x*block_length] = mypow(klartexte[i+blockIdx.x*block_length],3);
+		//geheimtexte[i+blockIdx.x*block_length] = mypow(,v);
+		
+		multi = x  = klartexte[i+blockIdx.x*block_length];
+		for (j = 1; i < v; i++)
+			x *= multi;
+		
+		geheimtexte[i+blockIdx.x*block_length] = x % n;
 	}
 }
 
