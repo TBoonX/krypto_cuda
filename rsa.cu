@@ -42,6 +42,8 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 	
 	int block_length = anzahl_Texte/count_cores;
 	
+	int v = 3;
+	
 	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
