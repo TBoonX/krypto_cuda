@@ -36,7 +36,7 @@ static void HandleError( cudaError_t err, const char *file, int line ) {
 }
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
-__global__ void verschluessselung()
+__global__ void verschluessselung(int klartexte[], int geheimtexte[])
 {
 	int i;
 	
@@ -52,7 +52,7 @@ __global__ void verschluessselung()
 }
 
 
-__global__ void entschluessselung()
+__global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 {
 	int i;
 	
@@ -61,7 +61,7 @@ __global__ void entschluessselung()
 	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		klartexte[i+blockIdx.x*block_length] = pow(geheimtexte[i+blockIdx.x*block_length],e) % n;
+		klartexte_pruefung[i+blockIdx.x*block_length] = pow(geheimtexte[i+blockIdx.x*block_length],e) % n;
 	}
 
 	printf("\nProzessor %d hat entschluesselt.\n", blockIdx.x);
@@ -104,7 +104,7 @@ int main(void) {
 
 	dim3 blocks(count_cores, 1);
 
-	verschluessselung<<<blocks, 1>>>();
+	verschluessselung<<<blocks, 1>>>(dev_klartexte, dev_geheimtexte);
 
         HANDLE_ERROR(cudaMemcpy(geheimtexte, dev_geheimtexte, sizeof(geheimtexte), cudaMemcpyDeviceToHost));
 		
