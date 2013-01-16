@@ -36,7 +36,7 @@ static void HandleError( cudaError_t err, const char *file, int line ) {
 }
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
-__device__ void verschluessselung(int klartexte[], int geheimtexte[])
+__global__ void verschluessselung(int klartexte[], int geheimtexte[])
 {
 	int i, j, multi, x;
 	
@@ -45,7 +45,7 @@ __device__ void verschluessselung(int klartexte[], int geheimtexte[])
 	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		geheimtexte[i+blockIdx.x*block_length] = (int)pow(klartexte[i+blockIdx.x*block_length],3) % 15;
+		geheimtexte[i+blockIdx.x*block_length] = (int)mypow(klartexte[i+blockIdx.x*block_length],3) % 15;
 		//geheimtexte[i+blockIdx.x*block_length] = mypow(,v);
 		
 		/*
@@ -59,7 +59,7 @@ __device__ void verschluessselung(int klartexte[], int geheimtexte[])
 }
 
 
-__device__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
+__global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 {
 	int i, j, multi, x;
 	
@@ -68,7 +68,7 @@ __device__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 	for (i = 0 ; i < block_length; i++)
 	{
 		//Integer hoch 103 ist zu hoch!
-		klartexte_pruefung[i+blockIdx.x*block_length] = (int)pow(geheimtexte[i+blockIdx.x*block_length],e) % n;
+		klartexte_pruefung[i+blockIdx.x*block_length] = (int)mypow(geheimtexte[i+blockIdx.x*block_length],e) % n;
 		
 		/*
 		multi = x  = geheimtexte[i+blockIdx.x*block_length];
