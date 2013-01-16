@@ -38,9 +38,9 @@ static void HandleError( cudaError_t err, const char *file, int line ) {
 
 __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 {
-	int i, j, multi, x;
+	long int i, j, multi, x;
 	
-	int block_length = anzahl_Texte/count_cores;
+	long int block_length = anzahl_Texte/count_cores;
 	
 	for (i = 0 ; i < block_length; i++)
 	{
@@ -56,9 +56,9 @@ __global__ void verschluessselung(int klartexte[], int geheimtexte[])
 
 __global__ void entschluessselung(int geheimtexte[], int klartexte_pruefung[])
 {
-	int i, j, multi, x;
+	long int i, j, multi, x;
 	
-	int block_length = anzahl_Texte/count_cores;
+	long int block_length = anzahl_Texte/count_cores;
 
 	for (i = 0 ; i < block_length; i++)
 	{
@@ -76,9 +76,9 @@ int main(void) {
 	cudaEvent_t start, stop;
 	float elapsedTime;
 	
-	int klartexte[anzahl_Texte];
-	int klartexte_pruefung[anzahl_Texte];
-	int geheimtexte[anzahl_Texte];
+	long int klartexte[anzahl_Texte];
+	long int klartexte_pruefung[anzahl_Texte];
+	long int geheimtexte[anzahl_Texte];
 
 	//Klartetexte Array belegen
 	//rand initialisieren
@@ -91,11 +91,11 @@ int main(void) {
 	printf("Die Klartexte:\n");
 	for (i = 0; i < anzahl_Texte; i++)
 	{
-		printf("%d, ", klartexte[i]);
+		printf("%ld, ", klartexte[i]);
 	}
 	printf("\n\n");
 
-	int *dev_klartexte, *dev_geheimtexte, *dev_klartexte_pruefung;
+	long int *dev_klartexte, *dev_geheimtexte, *dev_klartexte_pruefung;
 
 	HANDLE_ERROR(cudaEventCreate(&start));
 	HANDLE_ERROR(cudaEventCreate(&stop));
@@ -119,7 +119,7 @@ int main(void) {
 	printf("Die Klartexte wurden verschluesselt.\n\nGeheimtexte:\n");
 	for (i = 0; i < anzahl_Texte; i++)
 	{
-		printf("%d, ", geheimtexte[i]);
+		printf("%ld, ", geheimtexte[i]);
 	}
 	printf("\n\n");
 	
@@ -134,7 +134,7 @@ int main(void) {
 	printf("Die Geheimtexte wurden entschluesselt.\n\nKlartexte:\n");
 		for (i = 0; i < anzahl_Texte; i++)
 		{
-			printf("%d, ", klartexte_pruefung[i]);
+			printf("%ld, ", klartexte_pruefung[i]);
 		}
 		printf("\n\n");
 
