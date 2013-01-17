@@ -5,6 +5,6 @@ Idee: GMP für große Zahlen
 
 -> Ging einzubinden, jedoch war die Verwendung der FUnktionen in den CUDA-Funktionen nicht möglich
 
-Idee: CUMP - GMP für CUDA
+Idee: CUMP - GMP für CUDA https://github.com/skystar0227/CUMP
 
 ->scheint es zu includen; noch keine api doku gefunden; muss getestet werden
