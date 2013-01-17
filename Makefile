@@ -1,4 +1,4 @@
-TARGET=rsa_gmp
+TARGET=rsa_cump
 
 NVCC=/usr/local/cuda/bin/nvcc
 

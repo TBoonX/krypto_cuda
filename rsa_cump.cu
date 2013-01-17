@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
-//GMP Bibliothek
+//CUMP Bibliothek
 #include <gmp.h>
+#include <cump/cump.cuh>
 
 __device__ mpz_t biginteger;
 
