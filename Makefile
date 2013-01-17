@@ -1,11 +1,11 @@
-TARGET=rsa
+TARGET=rsa_gmp
 
 NVCC=/usr/local/cuda/bin/nvcc
 
 
-NV_CFLAGS=-g
+NV_CFLAGS=-g -lgmp
 
-NV_LDFLAGS=
+NV_LDFLAGS=-lgmp
 	
 $(TARGET): $(TARGET).o
 	$(NVCC) $(NV_LDFLAGS) $+ -o $(TARGET)
