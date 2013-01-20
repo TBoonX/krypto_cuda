@@ -8,3 +8,14 @@ Idee: GMP für große Zahlen
 Idee: CUMP - GMP für CUDA https://github.com/skystar0227/CUMP
 
 ->scheint es zu includen; noch keine api doku gefunden; muss getestet werden
+
+
+
+CUMP kann nur mit Vektoren was machen.
+Außerdem komme ich nicht in den namespace rein, um die Funktionen nutzen zu können.
+
+
+
+GMP kann NICHT mit CUDA verwendet werden, da die Bibliothek für x86 gebaut ist.
+
+Mir ist keine Lösung für unser Problem bekannt.
