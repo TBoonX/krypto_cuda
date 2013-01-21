@@ -188,7 +188,7 @@ int main(void) {
 	HANDLE_ERROR(cudaMalloc((void **)&dev_gt_splitted, sizeof(kt_splitted)));
 
 	//kopieren
-	HANDLE_ERROR(cudaMemcpy(dev_kt_splitted, kt_splitted, sizeof(kt_splitted), cudaMemcpyHostToDevice));
+	HANDLE_ERROR(cudaMemcpy(dev_kt_splitted, kt_splitted, sizeof(dev_kt_splitted), cudaMemcpyHostToDevice));
 
 	//Block festlegen
 	dim3 blocks(count_cores, 1);
@@ -203,7 +203,7 @@ int main(void) {
 	entschluessselung<<<blocks, 1>>>(dev_gt_splitted, dev_kt_splitted2);
 	
 	//zurueckkopieren
-	HANDLE_ERROR(cudaMemcpy(kt_splitted2, dev_kt_splitted2, sizeof(kt_splitted2), cudaMemcpyDeviceToHost));
+	HANDLE_ERROR(cudaMemcpy(kt_splitted2, dev_kt_splitted2, sizeof(dev_kt_splitted2), cudaMemcpyDeviceToHost));
 		
 	//Ende der Zeitmessung
 	HANDLE_ERROR(cudaEventRecord(stop, 0));
