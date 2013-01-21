@@ -72,8 +72,10 @@ __global__ void entschluessselung(long int geheimtexte[], long int klartexte_pru
 	}
 }
 
-void splitt(char text[], long int numbers)
+void splitt(char text[], long int numbers[])
 {
+	int i;
+	
 	//Splitte Klartext
 	for (i = 0; i < anzahl_Zeichen; i++)
 	{
