@@ -92,7 +92,7 @@ int main(void) {
 	printf("\n\nDer Klartext ist %d Zeichen lang.\n", sizeof(klartext)/sizeof(char));
 	
 	//Splitte Klartext
-	for (i = 0; i < anzahl_Zeichen> i++)
+	for (i = 0; i < anzahl_Zeichen; i++)
 	{
 		;
 	}
