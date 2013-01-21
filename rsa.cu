@@ -212,7 +212,7 @@ int main(void) {
 	printf("\n\nDer Klartext lautet nun:\n");
 	for (i = 0; i < anzahl_Zeichen; i++)
 	{
-		putchar(klartext[i]);
+		putchar(klartext2[i]);
 	}
 	printf("\n\n");
 
