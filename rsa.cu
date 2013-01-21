@@ -118,6 +118,31 @@ void splitt(char text[], long int numbers[])
 	}
 }
 
+void unsplitt(char text[], long int numbers[])
+{
+	int i;
+	
+	//Splitte Klartext
+	for (i = 0; i < anzahl_Zeichen; i++)
+	{
+		int number = numbers[i*3]+numbers[i*3+1]+numbers[i*3+2];
+		char t;
+		
+		//int in char
+		//Sonderzeichen
+		if (number == 27)		//,
+			t = ',';
+		else if (number == 28)		//.
+			number = t = '.';
+		else if (number == 29)		//?
+			t = '?';
+		else				//a-z
+			t = (char)number+97;
+			
+		text[i] = t;
+	}
+}
+
 int main(void) {
 	int i;
 	cudaEvent_t start, stop;
@@ -127,8 +152,8 @@ int main(void) {
 	char klartext2[anzahl_Zeichen+1];
 	long int kt_splitted[anzahl_Zeichen*3+1];
 	long int kt_splitted2[anzahl_Zeichen*3+1];
-	long int geheimtext_splitted[anzahl_Zeichen*3+1];
-	long int *dev_kt_splitted, *dev_kt_splitted2, *dev_geheimtext_splitted;
+	long int gt_splitted[anzahl_Zeichen*3+1];
+	long int *dev_kt_splitted, *dev_kt_splitted2, *dev_gt_splitted;
 	
 	//Debug
 	printf("\na: %d   z: %d   ,: %d   .: %d   ?: %d\n\n", (int)'a', (int)'z', (int)',', (int)'.', (int)'?');
@@ -170,8 +195,9 @@ int main(void) {
 
 	HANDLE_ERROR(cudaEventElapsedTime(&elapsedTime, start, stop));
 	printf("Elapsed time: %3.1f ms\n", elapsedTime);
-
-
+	
+	//unsplitt(klartext2, kt_splitted);
+	unsplitt(klartext2, kt_splitted);
 
 	HANDLE_ERROR(cudaEventDestroy(start));
 	HANDLE_ERROR(cudaEventDestroy(stop));
