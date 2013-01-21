@@ -41,7 +41,7 @@ __global__ void verschluessselung(long int klartexte[], long int geheimtexte[])
 {
 	long int i, j, multi, x;
 	
-	long int block_length = anzahl_Texte/count_cores;
+	long int block_length = anzahl_Zeichen/count_cores;
 	
 	for (i = 0 ; i < block_length; i++)
 	{
@@ -59,7 +59,7 @@ __global__ void entschluessselung(long int geheimtexte[], long int klartexte_pru
 {
 	long int i, j, multi, x;
 	
-	long int block_length = anzahl_Texte/count_cores;
+	long int block_length = anzahl_Zeichen/count_cores;
 
 	for (i = 0 ; i < block_length; i++)
 	{
@@ -77,8 +77,8 @@ int main(void) {
 	cudaEvent_t start, stop;
 	float elapsedTime;
 	
-	char klartext[anzahlZeichen+1];
-	char klartext2[anzahlZeichen+1];
+	char klartext[anzahl_Zeichen+1];
+	char klartext2[anzahl_Zeichen+1];
 	
 
 	//Klartetext erzeugen
