@@ -164,6 +164,14 @@ int main(void) {
 
 	printf("\n\nDer Klartext ist %d Zeichen lang.\n", sizeof(klartext)/sizeof(char));
 	
+	//Ausgabe
+	printf("\n\nDer Klartext:\n");
+	for (i = 0; i < anzahl_Zeichen; i++)
+	{
+		putchar(klartext2[i]);
+	}
+	printf("\n\n");
+	
 	//Chars in ints aufsplitten
 	splitt(klartext, kt_splitted);
 
