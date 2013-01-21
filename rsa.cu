@@ -176,7 +176,7 @@ int main(void) {
 	//klartext2 mit a füllen
 	for (i = 0; i < anzahl_Zeichen; i++)
 	{
-		klartext[i] = 'a';
+		klartext2[i] = 'a';
 	}
 	
 	//Chars in ints aufsplitten
