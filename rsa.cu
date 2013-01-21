@@ -132,7 +132,7 @@ void unsplitt(char text[], long int numbers[])
 		else if (number == 28)		//.
 			number = t = '.';
 		else if (number == 29)		//?
-			t = '?';
+			t = '\n';
 		else				//a-z
 			t = (char)number+97;
 			
@@ -203,6 +203,9 @@ int main(void) {
 	
 	//ints wieder in char umwandeln
 	unsplitt(klartext2, kt_splitted2);
+	
+	//Ausgabe
+	printf("\n\nDer Klartext lautet nun:\n%s\n\n", klartext2);
 
 	//freigeben
 	HANDLE_ERROR(cudaEventDestroy(start));
