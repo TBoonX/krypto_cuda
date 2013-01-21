@@ -112,7 +112,7 @@ void splitt(char text[], long int numbers[])
 		{
 			numbers[i*3] = 10;
 			numbers[i*3+1] = 10;
-			numbers[i*3+2] = modulo;
+			numbers[i*3+2] = number-20;
 		}
 	}
 }
