@@ -173,6 +173,12 @@ int main(void) {
 	}
 	printf("\n\n");
 	
+	//klartext2 mit a füllen
+	for (i = 0; i < anzahl_Zeichen; i++)
+	{
+		klartext[i] = 'a';
+	}
+	
 	//Chars in ints aufsplitten
 	splitt(klartext, kt_splitted);
 
