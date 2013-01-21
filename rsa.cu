@@ -11,12 +11,8 @@
 #define e 3
 #define v 3
 #define z 8
-#define anzahl_Texte 80
-#define count_cores 8
-
-//__device__ long int klartexte[anzahl_Texte];
-//__device__ long int klartexte_pruefung[anzahl_Texte];
-//__device__ long int geheimtexte[anzahl_Texte];
+#define anzahl_Texte 384
+#define count_cores 384
 
 /*
 Klartext: K
@@ -25,6 +21,11 @@ Verschluesselung: G = K^v mod n
 Entschluesselung: K = G^e mod n
 
 Index des CUDA Kerns: blockIdx.x blockIdx.y
+
+Ein groesserer Text soll ver- und entschluesselt werden.
+Dieser wird jedoch wie folgt veraendert: nur kleine Buchstaben, keine Sonderzeichen außer . und ,
+Dafuer werden die einzellnen chars in Integer umgewandelt.
+Somit ist eine Verarbeitung moeglich.
 
 */
 
@@ -71,20 +72,6 @@ __global__ void entschluessselung(long int geheimtexte[], long int klartexte_pru
 	}
 }
 
-/*
-int* equals(long int *a, long int *b)
-{
-	int i;
-
-	for (i = 0; i < anzahl_Texte; i++)
-	{
-		if (a(i) != b(i))
-			return 0;
-	}
-	return 1;
-}
-*/
-
 int main(void) {
 	int i;
 	cudaEvent_t start, stop;
@@ -93,10 +80,6 @@ int main(void) {
 	long int klartexte[anzahl_Texte];
 	long int klartexte_pruefung[anzahl_Texte];
 	long int geheimtexte[anzahl_Texte];
-	
-	printf("\nlong int: %d\n", sizeof(long int));
-	printf("\nunsigned long int: %d\n", sizeof(unsigned long int));
-	printf("\nunsigned long long: %d\n", sizeof(unsigned long long));
 	
 
 	//Klartetexte Array belegen
@@ -157,11 +140,6 @@ int main(void) {
 		}
 		printf("\n\n");
 
-/*	printf("\nDie Klartexte sind ");
-	if (equals(klartexte, klartexte_pruefung))
-		printf("NICHT ");
-	printf("identisch.\n\n");
-*/
 	HANDLE_ERROR(cudaEventElapsedTime(&elapsedTime, start, stop));
 	printf("Elapsed time: %3.1f ms\n", elapsedTime);
 
