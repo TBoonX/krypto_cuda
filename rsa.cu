@@ -154,6 +154,7 @@ int main(void) {
 	long int kt_splitted[anzahl_Zeichen*3+1];
 	long int kt_splitted2[anzahl_Zeichen*3+1];
 	long int *dev_kt_splitted, *dev_kt_splitted2, *dev_gt_splitted;
+	int size = sizeof(kt_splitted);
 	
 	//Debug
 	printf("\na: %d   z: %d   ,: %d   .: %d   ?: %d    : %d\n\n", (int)'a', (int)'z', (int)',', (int)'.', (int)'?', (int)' ');
@@ -183,12 +184,12 @@ int main(void) {
 	HANDLE_ERROR(cudaEventRecord(start, 0));
 
 	//allokieren
-	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted, sizeof(kt_splitted)));
-	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted2, sizeof(kt_splitted2)));
-	HANDLE_ERROR(cudaMalloc((void **)&dev_gt_splitted, sizeof(kt_splitted)));
+	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted, size));
+	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted2, size));
+	HANDLE_ERROR(cudaMalloc((void **)&dev_gt_splitted, size));
 
 	//kopieren
-	HANDLE_ERROR(cudaMemcpy(dev_kt_splitted, kt_splitted, sizeof(dev_kt_splitted), cudaMemcpyHostToDevice));
+	HANDLE_ERROR(cudaMemcpy(dev_kt_splitted, kt_splitted, size, cudaMemcpyHostToDevice));
 
 	//Block festlegen
 	dim3 blocks(count_cores, 1);
@@ -203,7 +204,7 @@ int main(void) {
 	entschluessselung<<<blocks, 1>>>(dev_gt_splitted, dev_kt_splitted2);
 	
 	//zurueckkopieren
-	HANDLE_ERROR(cudaMemcpy(kt_splitted2, dev_kt_splitted2, sizeof(dev_kt_splitted2), cudaMemcpyDeviceToHost));
+	HANDLE_ERROR(cudaMemcpy(kt_splitted2, dev_kt_splitted2, size, cudaMemcpyDeviceToHost));
 		
 	//Ende der Zeitmessung
 	HANDLE_ERROR(cudaEventRecord(stop, 0));
