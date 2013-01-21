@@ -72,6 +72,50 @@ __global__ void entschluessselung(long int geheimtexte[], long int klartexte_pru
 	}
 }
 
+void splitt(char text[], long int numbers)
+{
+	//Splitte Klartext
+	for (i = 0; i < anzahl_Zeichen; i++)
+	{
+		int number = (int)text[i];
+		int modulo, multi;
+		
+		//char in int beginnend mit 0
+		//Sonderzeichen
+		if (number == 44)		//,
+			number = 27;
+		else if (number == 46)		//.
+			number = 28;
+		else if (number == 63)		//?
+			number = 29;
+		else				//a-z
+			number -= 97;
+		
+		modulo = number % 10;
+		multi = (int)(number/10);
+		
+		//splitt
+		if (multi == 0)
+		{
+			numbers[i*3] = modulo;
+			numbers[i*3+1] = 0;
+			numbers[i*3+2] = 0;
+		}
+		else if (multi == 1)
+		{
+			numbers[i*3] = 10;
+			numbers[i*3+1] = modulo;
+			numbers[i*3+2] = 0;
+		}
+		else
+		{
+			numbers[i*3] = 10;
+			numbers[i*3+1] = 10;
+			numbers[i*3+2] = modulo;
+		}
+	}
+}
+
 int main(void) {
 	int i;
 	cudaEvent_t start, stop;
@@ -79,8 +123,10 @@ int main(void) {
 	
 	char klartext[anzahl_Zeichen+1];
 	char klartext2[anzahl_Zeichen+1];
-	char kt_splittet[anzahl_Zeichen*3+1];
-	char kt_splittet2[anzahl_Zeichen*3+1];
+	long int kt_splitted[anzahl_Zeichen*3+1];
+	long int kt_splitted2[anzahl_Zeichen*3+1];
+	long int geheimtext_splitted[anzahl_Zeichen*3+1];
+	long int *dev_kt_splitted, *dev_kt_splitted2, *dev_geheimtext_splitted;
 	
 	//Debug
 	printf("\na: %d   z: %d   ,: %d   .: %d   ?: %d\n\n", (int)'a', (int)'z', (int)',', (int)'.', (int)'?');
@@ -91,11 +137,7 @@ int main(void) {
 
 	printf("\n\nDer Klartext ist %d Zeichen lang.\n", sizeof(klartext)/sizeof(char));
 	
-	//Splitte Klartext
-	for (i = 0; i < anzahl_Zeichen; i++)
-	{
-		;
-	}
+	splitt(klartext, kt_splitted);
 
 	HANDLE_ERROR(cudaEventCreate(&start));
 	HANDLE_ERROR(cudaEventCreate(&stop));
