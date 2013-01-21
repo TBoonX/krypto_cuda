@@ -87,6 +87,8 @@ void splitt(char text[], long int numbers[])
 			number = 28;
 		else if (number == 63)		//?
 			number = 29;
+		else if (number == 32)		//' '
+			number = 30;
 		else				//a-z
 			number -= 97;
 		
@@ -133,6 +135,8 @@ void unsplitt(char text[], long int numbers[])
 			number = t = '.';
 		else if (number == 29)		//?
 			t = '\n';
+		else if (number == 30)		//' '
+			t = ' ';
 		else				//a-z
 			t = (char)number+97;
 			
@@ -152,7 +156,7 @@ int main(void) {
 	long int *dev_kt_splitted, *dev_kt_splitted2, *dev_gt_splitted;
 	
 	//Debug
-	printf("\na: %d   z: %d   ,: %d   .: %d   ?: %d\n\n", (int)'a', (int)'z', (int)',', (int)'.', (int)'?');
+	printf("\na: %d   z: %d   ,: %d   .: %d   ?: %d    : %d\n\n", (int)'a', (int)'z', (int)',', (int)'.', (int)'?', (int)' ');
 	
 
 	//Klartetext erzeugen
