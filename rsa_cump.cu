@@ -36,13 +36,18 @@ static void HandleError( cudaError_t err, const char *file, int line ) {
 }
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
-void biAdd(mpz_t a, unsigned long int b)
+__device__ __host__ float biAdd(mpz_t a, unsigned long int b)
 {
 	mpz_add_ui(a, a, b);
+	return 1.0;
 }
+
+
 
 __global__ void verschluessselung(long int klartexte[], long int geheimtexte[])
 {
+	using namespace cump;
+
 	long int i, j, multi, x;
 	
 	long int block_length = anzahl_Texte/count_cores;
@@ -58,7 +63,10 @@ __global__ void verschluessselung(long int klartexte[], long int geheimtexte[])
 	}
 	
 	//GMP
+	//biAdd(biginteger, (unsigned long int)25);
+	//mpz_add_ui(biginteger, biginteger, (unsigned long int)25);
 	biAdd(biginteger, (unsigned long int)25);
+	
 }
 
 
@@ -92,7 +100,7 @@ int main(void) {
 	// mpz_t biginteger;
 	mpz_init(biginteger);
 	unsigned long int number = 1;
-	number = number<<31;
+	//number = number<<31;
 	mpz_set_ui(biginteger, number);
 	// gmp_printf("\nGMP Integer: %Zd\n\n", biginteger);
 	
@@ -137,6 +145,9 @@ int main(void) {
 
         HANDLE_ERROR(cudaMemcpy(geheimtexte, dev_geheimtexte, sizeof(geheimtexte), cudaMemcpyDeviceToHost));
 		
+
+	gmp_printf("\nGMP Integer: %Zd\n\n", biginteger);
+
 	printf("Die Klartexte wurden verschluesselt.\n\nGeheimtexte:\n");
 	for (i = 0; i < anzahl_Texte; i++)
 	{

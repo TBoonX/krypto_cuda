@@ -87,7 +87,7 @@ int main(void) {
 	srand((unsigned)time(NULL));
 	for (i = 0; i < anzahl_Texte; i ++)
 	{
-		klartexte[i] = rand() % 15;		//Zahlen nicht  zu gross waehlen
+		klartexte[i] = rand() % 14;		//Zahlen nicht  zu gross waehlen
 	}
 	
 	printf("Die Klartexte:\n");
