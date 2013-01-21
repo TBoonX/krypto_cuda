@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+//#include <math.h>
 
 //#define DEBUG
 
@@ -174,6 +175,8 @@ int main(void) {
 
 	//allokieren
 	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted, sizeof(kt_splitted)));
+	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted2, sizeof(kt_splitted2)));
+	HANDLE_ERROR(cudaMalloc((void **)&dev_gt_splitted, sizeof(gt_splitted)));
 
 	//kopieren
 	HANDLE_ERROR(cudaMemcpy(dev_kt_splitted, kt_splitted, sizeof(kt_splitted), cudaMemcpyHostToDevice));
