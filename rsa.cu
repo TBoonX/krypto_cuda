@@ -209,7 +209,12 @@ int main(void) {
 	unsplitt(klartext2, kt_splitted2);
 	
 	//Ausgabe
-	printf("\n\nDer Klartext lautet nun:\n%s\n\n", klartext2);
+	printf("\n\nDer Klartext lautet nun:\n");
+	for (i = 0; i < anzahl_Zeichen; i++)
+	{
+		putchar(klartext[i]);
+	}
+	printf("\n\n");
 
 	//freigeben
 	HANDLE_ERROR(cudaEventDestroy(start));
