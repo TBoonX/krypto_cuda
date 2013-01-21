@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-//#include <math.h>
 
 //#define DEBUG
 
@@ -79,7 +78,7 @@ void splitt(char text[], long int numbers[])
 	//Splitte Klartext
 	for (i = 0; i < anzahl_Zeichen; i++)
 	{
-		int number = (int)text[i];
+		long int number = (int)text[i];
 		int modulo, multi;
 		
 		//char in int beginnend mit 0
@@ -125,7 +124,7 @@ void unsplitt(char text[], long int numbers[])
 	//Splitte Klartext
 	for (i = 0; i < anzahl_Zeichen; i++)
 	{
-		int number = numbers[i*3]+numbers[i*3+1]+numbers[i*3+2];
+		long int number = numbers[i*3]+numbers[i*3+1]+numbers[i*3+2];
 		char t;
 		
 		//int in char
@@ -152,7 +151,6 @@ int main(void) {
 	char klartext2[anzahl_Zeichen+1];
 	long int kt_splitted[anzahl_Zeichen*3+1];
 	long int kt_splitted2[anzahl_Zeichen*3+1];
-	long int gt_splitted[anzahl_Zeichen*3+1];
 	long int *dev_kt_splitted, *dev_kt_splitted2, *dev_gt_splitted;
 	
 	//Debug
@@ -164,44 +162,51 @@ int main(void) {
 
 	printf("\n\nDer Klartext ist %d Zeichen lang.\n", sizeof(klartext)/sizeof(char));
 	
+	//Chars in ints aufsplitten
 	splitt(klartext, kt_splitted);
 
+	//Variablen der Zeitmessung erstellen
 	HANDLE_ERROR(cudaEventCreate(&start));
 	HANDLE_ERROR(cudaEventCreate(&stop));
 
-
-
+	//Start Zeitmessung
 	HANDLE_ERROR(cudaEventRecord(start, 0));
 
-        //HANDLE_ERROR(cudaMalloc((void **)&dev_klartexte, sizeof(klartexte)));
-        //HANDLE_ERROR(cudaMalloc((void **)&dev_geheimtexte, sizeof(geheimtexte)));
-        //HANDLE_ERROR(cudaMalloc((void **)&dev_klartexte_pruefung, sizeof(klartexte_pruefung)));
+	//allokieren
+	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted, sizeof(kt_splitted)));
 
-        //HANDLE_ERROR(cudaMemcpy(dev_klartexte, klartexte, sizeof(klartexte), cudaMemcpyHostToDevice));
+	//kopieren
+	HANDLE_ERROR(cudaMemcpy(dev_kt_splitted, kt_splitted, sizeof(kt_splitted), cudaMemcpyHostToDevice));
 
+	//Block festlegen
 	dim3 blocks(count_cores, 1);
 
-	//verschluessselung<<<blocks, 1>>>(dev_klartexte, dev_geheimtexte);
+	//verschluesseln
+	verschluessselung<<<blocks, 1>>>(dev_kt_splitted, dev_gt_splitted);
 
-        //HANDLE_ERROR(cudaMemcpy(geheimtexte, dev_geheimtexte, sizeof(geheimtexte), cudaMemcpyDeviceToHost));
+	//zurueckkopieren
+	//HANDLE_ERROR(cudaMemcpy(geheimtexte, dev_geheimtexte, sizeof(geheimtexte), cudaMemcpyDeviceToHost));
 	
-	//entschluessselung<<<blocks, 1>>>(dev_geheimtexte, dev_klartexte_pruefung);
+	//entschluesseln
+	entschluessselung<<<blocks, 1>>>(dev_gt_splitted, dev_kt_splitted2);
 	
-	//HANDLE_ERROR(cudaMemcpy(klartexte_pruefung, dev_klartexte_pruefung, sizeof(klartexte_pruefung), cudaMemcpyDeviceToHost));
+	//zurueckkopieren
+	HANDLE_ERROR(cudaMemcpy(kt_splitted2, dev_kt_splitted2, sizeof(kt_splitted2), cudaMemcpyDeviceToHost));
 		
-
+	//Ende der Zeitmessung
 	HANDLE_ERROR(cudaEventRecord(stop, 0));
 	HANDLE_ERROR(cudaEventSynchronize(stop));
 
+	//Ausgabe der verstrichenen Zeit
 	HANDLE_ERROR(cudaEventElapsedTime(&elapsedTime, start, stop));
 	printf("Elapsed time: %3.1f ms\n", elapsedTime);
 	
-	//unsplitt(klartext2, kt_splitted);
-	unsplitt(klartext2, kt_splitted);
+	//ints wieder in char umwandeln
+	unsplitt(klartext2, kt_splitted2);
 
+	//freigeben
 	HANDLE_ERROR(cudaEventDestroy(start));
 	HANDLE_ERROR(cudaEventDestroy(stop));
-	
 
 	return EXIT_SUCCESS;
 }
