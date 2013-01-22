@@ -38,6 +38,9 @@ __global__ void verschluessselung(long int klartexte[], long int geheimtexte[])
 {
 	long int i, j, multi, x;
 	
+	/*
+	 * Schleife für Blockgroesse 384 mit je einem Thread
+	
 	long int block_length = anzahl_Zeichen/count_cores;
 	
 	for (i = 0 ; i < block_length; i++)
@@ -48,12 +51,26 @@ __global__ void verschluessselung(long int klartexte[], long int geheimtexte[])
 		
 		geheimtexte[i+blockIdx.x*count_cores] = x % n;
 	}
+	*/
+	
+	
+	//Fuer 384 Bloecke mit 7 Threads
+	long int threads = anzahl_Zeichen/count_cores;
+	
+	multi = x  = klartexte[threadIdx.x+blockIdx.x*threads];
+	for (j = 1; j < v; j++)
+		x *= multi;
+	
+	geheimtexte[threadIdx.x+blockIdx.x*threads] = x % n;
 }
 
 
 __global__ void entschluessselung(long int geheimtexte[], long int klartexte_pruefung[])
 {
 	long int i, j, multi, x;
+	
+	/*
+	 * Schleife für Blockgroesse 384 mit je einem Thread
 	
 	long int block_length = anzahl_Zeichen/count_cores;
 
@@ -65,6 +82,16 @@ __global__ void entschluessselung(long int geheimtexte[], long int klartexte_pru
 		
 		klartexte_pruefung[i+blockIdx.x*count_cores] = x % n;
 	}
+	*/
+	
+	//Fuer 384 Bloecke mit 7 Threads
+	long int threads = anzahl_Zeichen/count_cores;
+	
+	multi = x  = geheimtexte[threadIdx.x+blockIdx.x*threads];
+	for (j = 1; j < e; j++)
+		x *= multi;
+	
+	klartexte_pruefung[threadIdx.x+blockIdx.x*threads] = x % n;
 }
 
 void splitt(char text[], long int numbers[])
@@ -146,6 +173,7 @@ int main(void) {
 	int i;
 	cudaEvent_t start, stop;
 	float elapsedTime;
+	int count_Threads;
 	
 	char klartext[anzahl_Zeichen+1];
 	char klartext2[anzahl_Zeichen+1];
@@ -198,10 +226,13 @@ int main(void) {
 	HANDLE_ERROR(cudaMemcpy(dev_kt_splitted, kt_splitted, size, cudaMemcpyHostToDevice));
 
 	//Block festlegen
-	dim3 blocks(count_cores, 1);
+	//dim3 blocks(count_cores, 1);
+	
+	//Anzahl Threads pro Block
+	count_Threads = anzahl_Zeichen/count_cores; 
 
 	//verschluesseln
-	verschluessselung<<<blocks, 1>>>(dev_kt_splitted, dev_gt_splitted);
+	verschluessselung<<<count_cores, count_Threads>>>(dev_kt_splitted, dev_gt_splitted);
 
 	//zurueckkopieren
 	//HANDLE_ERROR(cudaMemcpy(geheimtexte, dev_geheimtexte, sizeof(geheimtexte), cudaMemcpyDeviceToHost));
@@ -210,7 +241,7 @@ int main(void) {
 	HANDLE_ERROR(cudaDeviceSynchronize());
 	
 	//entschluesseln
-	entschluessselung<<<blocks, 1>>>(dev_gt_splitted, dev_kt_splitted2);
+	entschluessselung<<<count_cores, count_Threads>>>(dev_gt_splitted, dev_kt_splitted2);
 	
 	//zurueckkopieren
 	HANDLE_ERROR(cudaMemcpy(kt_splitted2, dev_kt_splitted2, size, cudaMemcpyDeviceToHost));
