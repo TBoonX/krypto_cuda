@@ -187,7 +187,7 @@ int main(void) {
 	
 	//TESt
 	splitt(klartext, kt_splitted);
-	for (i = 0; i < anzahl_Texte; i++)
+	for (i = 0; i < anzahl_Zeichen; i++)
 	{
 		klartext[i] = '-';
 	}
