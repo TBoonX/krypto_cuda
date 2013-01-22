@@ -270,7 +270,7 @@ int main(void) {
 	HANDLE_ERROR(cudaEventDestroy(start));
 	HANDLE_ERROR(cudaEventDestroy(stop));
 	HANDLE_ERROR(cudaFree(dev_kt_splitted));
-	HANDLE_ERROR(cudaFree(dev_kt_splitted1));
+	HANDLE_ERROR(cudaFree(dev_kt_splitted2));
 	HANDLE_ERROR(cudaFree(dev_gt_splitted));
 
 	return EXIT_SUCCESS;
