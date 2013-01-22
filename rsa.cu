@@ -155,7 +155,7 @@ int main(void) {
 	int size = sizeof(kt_splitted);
 	
 	//Debug
-	printf("\na: %d   z: %d   ,: %d   .: %d   ?: %d    : %d\n\n", (int)'a', (int)'z', (int)',', (int)'.', (int)'?', (int)' ');
+	printf("\na: %d   z: %d   ,: %d   .: %d   ?: %d    : %d   backn: %d\n\n", (int)'a', (int)'z', (int)',', (int)'.', (int)'?', (int)' ',  (int)'\n');
 	
 
 	//Klartetext erzeugen
@@ -167,6 +167,8 @@ int main(void) {
 	printf("\n\nDer Klartext:\n");
 	for (i = 0; i < anzahl_Zeichen; i++)
 	{
+		if (klartext[i] == '?')
+			klartext[i] = '\n';
 		putchar(klartext[i]);
 	}
 	printf("\n\n");
