@@ -51,6 +51,7 @@ public class Rsa_java {
         return decryptedStr;
     }
     
+    //Quelle: http://andy.ekiwi.de/?p=181
     static private String loadFileToString(String fileName) throws IOException {
         File file = new File(fileName);
         StringBuffer content = new StringBuffer();
