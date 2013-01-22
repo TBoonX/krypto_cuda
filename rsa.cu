@@ -42,12 +42,11 @@ __global__ void verschluessselung(long int klartexte[], long int geheimtexte[])
 	
 	for (i = 0 ; i < block_length; i++)
 	{
-		multi = x  = klartexte[i+blockIdx.x*block_length];
+		multi = x  = klartexte[i+blockIdx.x*count_cores];
 		for (j = 1; j < v; j++)
 			x *= multi;
 		
-		geheimtexte[i+blockIdx.x*block_length] = x % n;
-		
+		geheimtexte[i+blockIdx.x*count_cores] = x % n;
 	}
 }
 
@@ -60,12 +59,11 @@ __global__ void entschluessselung(long int geheimtexte[], long int klartexte_pru
 
 	for (i = 0 ; i < block_length; i++)
 	{
-		multi = x  = geheimtexte[i+blockIdx.x*block_length];
+		multi = x  = geheimtexte[i+blockIdx.x*count_cores];
 		for (j = 1; j < e; j++)
 			x *= multi;
 		
-		klartexte_pruefung[i+blockIdx.x*block_length] = x % n;
-		
+		klartexte_pruefung[i+blockIdx.x*count_cores] = x % n;
 	}
 }
 
