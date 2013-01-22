@@ -180,11 +180,18 @@ int main(void) {
 	long int kt_splitted[anzahl_Zeichen*3+1];
 	long int kt_splitted2[anzahl_Zeichen*3+1];
 	long int *dev_kt_splitted, *dev_kt_splitted2, *dev_gt_splitted;
-	int size = sizeof(long int)*(anzahl_Zeichen*3+1)*10;
+	int size = sizeof(long int)*(anzahl_Zeichen*3+1);
 	
 	//Debug
 	printf("\na: %d   z: %d   ,: %d   .: %d   ?: %d    : %d   backn: %d\n\n", (int)'a', (int)'z', (int)',', (int)'.', (int)'?', (int)' ',  (int)'\n');
 	
+	//TESt
+	splitt(klartext, kt_splitted);
+	for (i = 0; i < anzahl_Texte; i++)
+	{
+		klartext[i] = '-';
+	}
+	unsplitt(klartext, kt_splitted);
 
 	//Klartetext erzeugen
 	klartext[anzahl_Zeichen] = klartext2[anzahl_Zeichen] = '\0';
@@ -219,9 +226,9 @@ int main(void) {
 	HANDLE_ERROR(cudaEventRecord(start, 0));
 
 	//allokieren
-	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted, size));
-	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted2, size));
-	HANDLE_ERROR(cudaMalloc((void **)&dev_gt_splitted, size));
+	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted, size*10));
+	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted2, size*10));
+	HANDLE_ERROR(cudaMalloc((void **)&dev_gt_splitted, size*10));
 
 	//kopieren
 	HANDLE_ERROR(cudaMemcpy(dev_kt_splitted, kt_splitted, size, cudaMemcpyHostToDevice));
