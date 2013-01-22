@@ -1,0 +1,36 @@
+Log
+-----------
+
+Idee: GMP für große Zahlen
+
+-> Ging einzubinden, jedoch war die Verwendung der FUnktionen in den CUDA-Funktionen nicht möglich
+
+Idee: CUMP - GMP für CUDA https://github.com/skystar0227/CUMP
+
+->scheint es zu includen; noch keine api doku gefunden; muss getestet werden
+
+
+
+CUMP kann nur mit Vektoren was machen.
+Außerdem komme ich nicht in den namespace rein, um die Funktionen nutzen zu können.
+
+
+
+GMP kann NICHT mit CUDA verwendet werden, da die Bibliothek für x86 gebaut ist.
+
+Mir ist keine Lösung für unser Problem bekannt.
+
+
+Idee: GMP Variablen und Funktion mit __device__ versehen.
+-> Thema für Doktorarbeit
+
+Idee: https://github.com/andrei-kopytov/RSA-Encryption-with-CUDA nutzen
+
+->RSA-Implementation mit eigener BigInteger Klasse.
+Aktuell aber keine CUDA-Nutzung. - rechnet bei 128 zeichen langen Schlüsseln mehrere Minuten
+
+
+Folglich mit sehr kleinen Schlüsseln rechnen und trotzdem mit JAVA Implementation (auch kleine Zahlen) vergleichen.
+Dabei darauf hinweisen, dass eine Realisierung von RSA mit CUDA in dieser Zei nur so möglich ist.
+Es darf jedoch geäußert werden, dass 1024 Bit RSA mit Java (CPU) mehrere Minuten dauert, wohin gegen mit CUDA (GPU) wenige Minuten benötigt werden.
+Eine Verschnellerung von 10 bis 50 fach sollte zu erwarten sein.
