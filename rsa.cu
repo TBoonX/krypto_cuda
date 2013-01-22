@@ -206,6 +206,9 @@ int main(void) {
 	//zurueckkopieren
 	//HANDLE_ERROR(cudaMemcpy(geheimtexte, dev_geheimtexte, sizeof(geheimtexte), cudaMemcpyDeviceToHost));
 	
+	//sync
+	HANDLE_ERROR(cudaDeviceSynchronize());
+	
 	//entschluesseln
 	entschluessselung<<<blocks, 1>>>(dev_gt_splitted, dev_kt_splitted2);
 	
