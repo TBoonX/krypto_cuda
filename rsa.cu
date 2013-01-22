@@ -163,7 +163,7 @@ void unsplitt(char text[], long int numbers[])
 		else if (number == 30)		//' '
 			t = ' ';
 		else				//a-z
-			t = (char)number+97;
+			t = (char)(number+97);
 			
 		text[i] = t;
 	}
@@ -180,16 +180,21 @@ int main(void) {
 	long int kt_splitted[anzahl_Zeichen*3+1];
 	long int kt_splitted2[anzahl_Zeichen*3+1];
 	long int *dev_kt_splitted, *dev_kt_splitted2, *dev_gt_splitted;
-	int size = sizeof(kt_splitted);
+	int size = sizeof(long int)*(anzahl_Zeichen*3+1);
 	
 	//Debug
 	printf("\na: %d   z: %d   ,: %d   .: %d   ?: %d    : %d   backn: %d\n\n", (int)'a', (int)'z', (int)',', (int)'.', (int)'?', (int)' ',  (int)'\n');
 	
 
 	//Klartetext erzeugen
+	klartext[anzahl_Zeichen] = klartext2[anzahl_Zeichen] = '\0';
 	strcpy(klartext, "hat der alte hexenmeister?sich doch einmal wegbegeben.?und nun sollen seine geister?auch nach meinem willen leben.?seine wort und werke?merkt ich und den brauch,?und mit geistesstaerke?tu ich wunder auch.?walle. walle?manche strecke,?dass, zum zwecke,?wasser fliesse?und mit reichem, vollem schwalle?zu dem bade sich ergiesse.?und nun komm, du alter besen.?nimm die schlechten lumpenhuellen ?bist schon lange knecht gewesen:?nun erfuelle meinen willen.?auf zwei beinen stehe,?oben sei ein kopf,?eile nun und gehe?mit dem wassertopf.?walle. walle?manche strecke,?dass, zum zwecke,?wasser fliesse?und mit reichem, vollem schwalle?zu dem bade sich ergiesse.?seht, er laeuft zum ufer nieder,?wahrlich. ist schon an dem flusse,?und mit blitzesschnelle wieder?ist er hier mit raschem gusse.?schon zum zweiten male.?wie das becken schwillt.?wie sich jede schale?voll mit wasser fuellt.?stehe. stehe.?denn wir haben?deiner gaben?vollgemessen. ?ach, ich merk es. wehe. wehe.?hab ich doch das wort vergessen.?ach, das wort, worauf am ende?er das wird, was er gewesen.?ach, er laeuft und bringt behende.?waerst du doch der alte besen.?immer neue guesse?bringt er schnell herein,?ach. und hundert fluesse?stuerzen auf mich ein.?nein, nicht laenger?kann ichs lassen ?will ihn fassen.?das ist tuecke.?ach. nun wird mir immer baenger.?welche mine. welche blicke.?o du ausgeburt der hoelle.?soll das ganze haus ersaufen??seh ich ueber jede schwelle?doch schon wasserstroeme laufen.?ein verruchter besen,?der nicht hoeren will.?stock, der du gewesen,?steh doch wieder still.?willst am ende?gar nicht lassen??will dich fassen,?will dich halten?und das alte holz behende?mit dem scharfen beile spalten.?seht da kommt er schleppend wieder.?wie ich mich nur auf dich werfe,?gleich, o kobold, liegst du nieder ?krachend trifft die glatte schaerfe.?wahrlich, brav getroffen.?seht, er ist entzwei.?und nun kann ich hoffen,?und ich atme frei.?wehe. wehe.?beide teile?stehn in eile?schon als knechte?voellig fertig in die hoehe.?helft mir, ach. ihr hohen maechte.?und sie laufen. nass und naesser?wirds im saal und auf den stufen.?welch entsetzliches gewaesser.?herr und meister. hoer mich rufen.  ?ach, da kommt der meister.?herr, die not ist gross.?die ich rief, die geister?werd ich nun nicht los.?in die ecke,?besen, besen.?seids gewesen.?denn als geister?ruft euch nur zu diesem zwecke,?erst hervor der alte meister.?                                                                                                                                                                                                                                                                                                    ");
 
 	printf("\n\nDer Klartext ist %d Zeichen lang.\n", sizeof(klartext)/sizeof(char));
+	
+	//Test
+	splitt(klartext, kt_splitted);
+	unsplitt(klartext, kt_splitted);
 	
 	//Ausgabe
 	printf("\n\nDer Klartext:\n");
