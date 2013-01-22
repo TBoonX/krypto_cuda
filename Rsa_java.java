@@ -95,10 +95,10 @@ public class Rsa_java {
         long stopCrypt = System.currentTimeMillis();
         
         //entschluesseln - dabei { wieder durch Leerzeichen ersetzen um den Ursprungstext zu erhalten
-        String sTemp        = new String( decrypt(sCrypted) );
         long startDecrypt = System.currentTimeMillis();
-        String sPlainOut    = sTemp.replace('{', ' ').replace('|', '.').replace('}', ',').replace('~', '\n');
+        String sTemp        = new String( decrypt(sCrypted) );
         long stopDecrypt = System.currentTimeMillis();
+        String sPlainOut    = sTemp.replace('{', ' ').replace('|', '.').replace('}', ',').replace('~', '\n');
         
         if(debug) System.out.println("PlainIn:  ["+ sPlainIn.length()+"]\n" + sPlainIn);
         //if(debug) System.out.println("Crypted:  ["+ sCrypted.length()+"]\n" + sCrypted);
