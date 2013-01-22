@@ -66,15 +66,20 @@ public class Rsa_java {
         
         //verschluesseln - dabei Leerzeichen durch { ersetzen, da { im ASCII-Code nach z das nacheste zeichen ist
         // . -> |  ,-> }
+        long startCrypt = System.currentTimeMillis();
         String sCrypted     = new String( encrypt( sPlainIn.replace(' ', '{').replace('.', '|').replace(',', '}').replace('\n', '~').toLowerCase() ) );
+        long stopCrypt = System.currentTimeMillis();
         
         //entschluesseln - dabei { wieder durch Leerzeichen ersetzen um den Ursprungstext zu erhalten
         String sTemp        = new String( decrypt(sCrypted) );
+        long startDecrypt = System.currentTimeMillis();
         String sPlainOut    = sTemp.replace('{', ' ').replace('|', '.').replace('}', ',').replace('~', '\n');
+        long stopDecrypt = System.currentTimeMillis();
         
         if(debug) System.out.println("PlainIn:  ["+ sPlainIn.length()+"]\n" + sPlainIn);
         //if(debug) System.out.println("Crypted:  ["+ sCrypted.length()+"]\n" + sCrypted);
         if(debug) System.out.println("PlainOut: ["+ sPlainOut.length()+"]\n" + sPlainOut);
-    
+
+        System.out.println("Zeitmessung - Crypt: " + (stopCrypt-startCrypt) + " ms  Decrypt: "  + (stopDecrypt-startDecrypt) + " ms");
     }
 }
