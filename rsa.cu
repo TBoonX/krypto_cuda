@@ -110,7 +110,7 @@ void splitt(char text[], long int numbers[])
 			number = 27;
 		else if (number == 46)		//.
 			number = 28;
-		else if (number == 63)		//?
+		else if (number == 10)		//\n
 			number = 29;
 		else if (number == 32)		//' '
 			number = 30;
@@ -158,7 +158,7 @@ void unsplitt(char text[], long int numbers[])
 			t = ',';
 		else if (number == 28)		//.
 			number = t = '.';
-		else if (number == 29)		//?
+		else if (number == 29)		//\n
 			t = '\n';
 		else if (number == 30)		//' '
 			t = ' ';
