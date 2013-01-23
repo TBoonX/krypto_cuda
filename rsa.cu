@@ -37,7 +37,7 @@ static void HandleError( cudaError_t err, const char *file, int line ) {
 
 #define HANDLE_ERROR( err ) (HandleError( err, __FILE__, __LINE__ ))
 
-__global__ void verschluessselung(long int klartexte[], long int geheimtexte[])
+__global__ void verschluessselung(long int klartexte[], long int geheimtexte[], long int anzahl_Zeichen)
 {
 	long int j, multi, x;
 	
@@ -51,7 +51,7 @@ __global__ void verschluessselung(long int klartexte[], long int geheimtexte[])
 	geheimtexte[threadIdx.x+blockIdx.x*threads] = x % n;
 }
 
-__global__ void entschluessselung(long int geheimtexte[], long int klartexte_pruefung[])
+__global__ void entschluessselung(long int geheimtexte[], long int klartexte_pruefung[], long int anzahl_Zeichen)
 {
 	long int j, multi, x;
 	
@@ -129,25 +129,25 @@ int main(int argc, char *argv[]) {
 	char klartext2[anzahl_Zeichen+1];
 	long int kt_splitted[anzahl_Zeichen+1];
 	long int kt_splitted2[anzahl_Zeichen+1];
-	long int *dev_kt_splitted, *dev_kt_splitted2, *dev_gt_splitted;
+	long int *dev_kt_splitted, *dev_kt_splitted2, *dev_gt_splitted, *dev_anzahl_Zeichen;
 	int size = sizeof(long int)*(anzahl_Zeichen+1);
 	
 	if (argc < 2)
 	{
-		printf("\nParameter fuer Anzahl der Klartextzeichen fehlt!\n");
+		printf("\nParameter fuer Groesse der Klartexted fehlt!\n");
 		exit(0);
 	}
 	
 	//lese Anzahl der Zeichen
-	anzahl_Zeichen = atoi(argv[1]);
+	multi = atoi(argv[1]);
 	
-	if (anzahl_Zeichen < zauberlehrling && !(anzahl_Zeichen % zauberlehrling))
+	if (multi < 1)
 	{
-		printf("\nAnzahl der Zeichen ist eine ganze positive Zahl und vielfaches von 2688.\n");
+		printf("\nAnzahl der Zeichen ist eine ganze positive Zahl.\n");
 		exit(0);
 	}
 	
-	multi = anzahl_Zeichen/zauberlehrling;
+	anzahl_Zeichen = multi*zauberlehrling;
 	
 	printf("\n-|| RSA mit CUDA ||-\n\n\n");
 	
@@ -194,15 +194,17 @@ int main(int argc, char *argv[]) {
 	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted, size));
 	HANDLE_ERROR(cudaMalloc((void **)&dev_kt_splitted2, size));
 	HANDLE_ERROR(cudaMalloc((void **)&dev_gt_splitted, size));
+	HANDLE_ERROR(cudaMalloc((void **)&dev_anzahl_Zeichen, sizeof(anzahl_Zeichen)));
 	
 	//kopieren
 	HANDLE_ERROR(cudaMemcpy(dev_kt_splitted, kt_splitted, size, cudaMemcpyHostToDevice));
+	HANDLE_ERROR(cudaMemcpy(dev_anzahl_Zeichen, anzahl_Zeichen, sizeof(anzahl_Zeichen), cudaMemcpyHostToDevice));
 	
 	//Anzahl Threads pro Block
 	count_Threads = anzahl_Zeichen/count_cores;
 	
 	//verschluesseln
-	verschluessselung<<<count_cores, count_Threads>>>(dev_kt_splitted, dev_gt_splitted);
+	verschluessselung<<<count_cores, count_Threads>>(dev_kt_splitted, dev_gt_splitted);
 	
 	//sync
 	HANDLE_ERROR(cudaDeviceSynchronize());
