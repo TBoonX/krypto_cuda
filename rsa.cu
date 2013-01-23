@@ -204,13 +204,13 @@ int main(int argc, char *argv[]) {
 	count_Threads = anzahl_Zeichen/count_cores;
 	
 	//verschluesseln
-	verschluessselung<<<count_cores, count_Threads>>(dev_kt_splitted, dev_gt_splitted);
+	verschluessselung<<<count_cores, count_Threads>>(dev_kt_splitted, dev_gt_splitted, dev_anzahl_Zeichen);
 	
 	//sync
 	HANDLE_ERROR(cudaDeviceSynchronize());
 	
 	//entschluesseln
-	entschluessselung<<<count_cores, count_Threads>>>(dev_gt_splitted, dev_kt_splitted2);
+	entschluessselung<<<count_cores, count_Threads>>>(dev_gt_splitted, dev_kt_splitted2, dev_anzahl_Zeichen);
 	
 	//zurueckkopieren
 	HANDLE_ERROR(cudaMemcpy(kt_splitted2, dev_kt_splitted2, size, cudaMemcpyDeviceToHost));
