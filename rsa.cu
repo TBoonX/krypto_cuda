@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define output 0
+
 //Variablen
 #define p 5
 #define q 7
@@ -149,18 +151,21 @@ int main(int argc, char *argv[]) {
 		exit(0);
 	}
 	
-	printf("\nmulti: %d\n");
+	printf("\nmulti: %d\n", multi);
 	
 	//Ausgabe
-	printf("\n\nAnfang des  Klartextes:\n\n");
-	for (i = 0; i < anzahl_Zeichen; i++)
+	if (output)
 	{
-		if (klartext[i] == '?')
-			klartext[i] = '\n';
-		if (i < 546)
-			putchar(klartext[i]);
+		printf("\n\nAnfang des  Klartextes:\n\n");
+		for (i = 0; i < anzahl_Zeichen; i++)
+		{
+			if (klartext[i] == '?')
+				klartext[i] = '\n';
+			if (i < 546)
+				putchar(klartext[i]);
+		}
+		printf("\n\n");
 	}
-	printf("\n\n");
 	
 	//klartext2 mit a füllen
 	for (i = 0; i < anzahl_Zeichen; i++)
@@ -221,12 +226,15 @@ int main(int argc, char *argv[]) {
 	unsplitt(klartext2, kt_splitted2);
 	
 	//Ausgabe
-	printf("\n\nDer Klartext lautet nun: (Anfang)\n\n");
-	for (i = 0; i < 545; i++)
+	if (output)
 	{
-		putchar(klartext2[i]);
+		printf("\n\nDer Klartext lautet nun: (Anfang)\n\n");
+		for (i = 0; i < 545; i++)
+		{
+			putchar(klartext2[i]);
+		}
+		printf("\n\n");
 	}
-	printf("\n\n");
 	
 	//freigeben
 	HANDLE_ERROR(cudaEventDestroy(start));
