@@ -13,7 +13,7 @@
 #define v 5
 #define z 24
 //#define anzahl_Zeichen 268800
-__host__ long int anzahl_Zeichen = 0;
+long int anzahl_Zeichen = 0;
 #define count_cores 384
 
 /*
