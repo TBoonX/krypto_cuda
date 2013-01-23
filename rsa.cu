@@ -8,7 +8,7 @@
 #define e 5
 #define v 5
 #define z 24
-#define anzahl_Zeichen 2688
+#define anzahl_Zeichen 268800
 #define count_cores 384
 
 /*
