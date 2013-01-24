@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define output 0
+#define output 1
 
 //Variablen
 #define p 5
