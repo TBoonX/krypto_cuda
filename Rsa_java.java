@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package rsa_java;
 
 import java.io.*;
@@ -11,13 +7,17 @@ import java.io.*;
  */
 public class Rsa_java {
     
+    //Variablen für RSA
     static long p = 5; 
     static long q = 7;
     static long n = 35; // p * q
     static long e = 5;  // 1 < e < z, e teilerfremd zu z    AKA d
-    static long v = 5;  // (v*e)%z = 1 muss 1 ergeben 
+    static long v = 5;  // (v*e)%z = 1 
     static long z = 24; // (p-1)*(q-1)
     
+    /*
+     * Verschlüsseln
+     */
     static char[] encrypt(String plainStr) {
         long ti = 0;
 
@@ -33,6 +33,9 @@ public class Rsa_java {
         return encryptedStr;
     }
     
+    /*
+     * Entschlüsseln
+     */
     static char[] decrypt(String encryptedStr) {
         long ti = 0;
 
@@ -43,11 +46,9 @@ public class Rsa_java {
         for(int i = 0; i < encryptedStr.length(); i++) {
             ti = (int)encryptedStr.charAt(i);
             decryptedStr[i] = (char)(((int)(Math.pow(ti , e) % n))+'a');
-
-            //System.out.print(((int)(Math.pow(ti , e) % n)) + " ");
             
         }
-        //System.out.println();
+        
         return decryptedStr;
     }
     
@@ -104,16 +105,19 @@ public class Rsa_java {
             }
         }
 
-            
+        //Klartext vervielfachen
         if(rounds > 1) {
             if(debug) System.out.println("sPlainIn Laenge vorher: " + sPlainIn.length());
+            
             StringBuilder sb = new StringBuilder();
             for(int w = 0; w < rounds; w++) {
                 sb.append(sPlainIn);
             }
             sPlainIn = sb.toString();
+            
             if(debug) System.out.println("sPlainIn Laenge nachher: " + sPlainIn.length());
         }
+        
         //verschluesseln - dabei Leerzeichen durch { ersetzen, da { im ASCII-Code nach z das nacheste zeichen ist
         // . -> |  ,-> }
         long startCrypt = System.currentTimeMillis();
@@ -131,7 +135,5 @@ public class Rsa_java {
         if(debug) System.out.println("PlainOut: ["+ sPlainOut.length()+"]\n" + sPlainOut);
 
         System.out.println("Zeitmessung fuer "+ sPlainOut.length() +" Zeichen - Crypt: " + (stopCrypt-startCrypt) + " ms  Decrypt: "  + (stopDecrypt-startDecrypt) + " ms");
-    
-        
     }
 }
