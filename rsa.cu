@@ -62,6 +62,9 @@ __global__ void entschluessselung(long int geheimtexte[], long int klartexte_pru
 	klartexte_pruefung[threadIdx.x+blockIdx.x*threads] = x % n;
 }
 
+/*
+ * Umwandlung von char in Zahl 0 bis 30 .
+ */
 void splitt(char text[], long int numbers[])
 {
 	int i;
@@ -88,6 +91,9 @@ void splitt(char text[], long int numbers[])
 	}
 }
 
+/*
+ * Umwandlung von Zahl 0 bis 30 zu char.
+ */
 void unsplitt(char text[], long int numbers[])
 {
 	int i;
