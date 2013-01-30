@@ -3,4 +3,7 @@ krypto_cuda
 
 Kryptologie CUDA Beleg
 
-FINDE euch nicht!!! hab gestern vergessen deine nummer zu speichern, meine ist 01787226847
+CUDA C Datei: rsa.cu
+Wird mit Makefile compiliert.
+
+Java Datei: Rsa_java.java
